@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 
+const DEFAULT_IMAGE = `${import.meta.env.BASE_URL || './'}image.png`;
+
 export function useDraPhoto() {
   const [photoUrl, setPhotoUrl] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('dra_ana_vladia_photo');
       if (saved) return saved;
     }
-    return '/image.png';
+    return DEFAULT_IMAGE;
   });
 
   const updatePhoto = (newUrl: string) => {
@@ -31,14 +33,14 @@ export function useDraPhoto() {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('dra_ana_vladia_photo');
     }
-    setPhotoUrl('/image.png');
+    setPhotoUrl(DEFAULT_IMAGE);
     window.dispatchEvent(new Event('dra_photo_changed'));
   };
 
   useEffect(() => {
     const handleStorageChange = () => {
       const saved = localStorage.getItem('dra_ana_vladia_photo');
-      setPhotoUrl(saved || '/image.png');
+      setPhotoUrl(saved || DEFAULT_IMAGE);
     };
 
     window.addEventListener('dra_photo_changed', handleStorageChange);
